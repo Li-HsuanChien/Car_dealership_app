@@ -65,7 +65,8 @@ class CarModel(models.Model):
 class CarDealer(models.Model):
     # Fields for CarDealer model
     name = models.CharField(max_length=100)
-    location = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
     # Add any other fields you want for the CarDealer model
     full_name = models.CharField(max_length=100)
     id = models.IntegerField(primary_key=True)  # Assuming id is the primary key
