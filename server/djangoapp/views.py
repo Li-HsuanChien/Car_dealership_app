@@ -1,140 +1,137 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
-# from .restapis import related methods
+from .models import CarModel, CarMake, CarDealer, DealerReview
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
-from django.contrib.auth.forms import UserCreationForm
 import logging
 import json
-from django.http import JsonResponse
-from .models import CarDealer
-from .restapis import get_dealers_from_cf
-from .restapis import get_dealer_reviews_from_cf
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-def static_template(request):
-    return render(request, 'djangoapp/static_template.html')
-
-# Create an `about` view to render a static about page
 def about(request):
-    return render(request, 'djangoapp/about.html')
-# def about(request):
-# ...
+    context = {}
+    return render(request, 'djangoapp/about.html', context)
 
 
-# Create a `contact` view to return a static contact page
 def contact(request):
-    return render(request, 'djangoapp/contact.html')
+    context = {}
+    return render(request, 'djangoapp/contact.html', context)
+    
 
-# Create a `login_request` view to handle sign in request
+def registration_request(request):
+    context = {}
+    if request.method == 'GET':
+        return render(request, 'djangoapp/registration.html', context)
+    elif request.method == 'POST':
+        # Check if user exists
+        username = request.POST['username']
+        password = request.POST['psw']
+        first_name = request.POST['firstname']
+        last_name = request.POST['lastname']
+        user_exist = False
+        try:
+            User.objects.get(username=username)
+            user_exist = True
+        except:
+            logger.error("New user")
+        if not user_exist:
+            user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,
+                                            password=password)
+            user.is_superuser = True
+            user.is_staff=True
+            user.save()  
+            login(request, user)
+            return redirect("djangoapp:index")
+        else:
+            messages.warning(request, "The user already exists.")
+            return redirect("djangoapp:registration")
+
+
 def login_request(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['psw']
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, 'Successfully logged in.')
-            return redirect('index')  # Replace 'index' with the name of your home page URL
+            #messages.success(request, "Login successfully!")
+            return redirect('djangoapp:index')
         else:
-            messages.error(request, 'Invalid username or password.')
+            messages.warning(request, "Invalid username or password.")
+            return redirect("djangoapp:index")
 
-    return render(request, 'djangoapp/index.html') 
-# ...
 
-# Create a `logout_request` view to handle sign out request
 def logout_request(request):
     logout(request)
-    messages.success(request, 'Successfully logged out.')
-    return redirect('index')
-# ...
+    return redirect('djangoapp:index')
 
-# Create a `registration_request` view to handle sign up request
-def registration_request(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('index')  # Redirect to the desired page after signup
-    else:
-        form = UserCreationForm()
-    
-    return render(request, 'djangoapp/registration.html', {'form': form})
-# ...
 
-# Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
-    context = {}
     if request.method == "GET":
+        context = {}
+        url = "https://shanechien20-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+        dealerships = get_dealers_from_cf(url)
+        context["dealership_list"] = dealerships
         return render(request, 'djangoapp/index.html', context)
 
 
-# Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
-def get_dealer_details(request, dealer_id):
+def get_dealer_details(request, id):
     if request.method == "GET":
-        url = "your-cloud-function-domain/reviews/review-get"
-        api_key = "your_watson_nlu_api_key"  # Replace with your actual Watson NLU API key
-
-        # Get reviews from the URL
-        dealer_reviews = get_dealer_reviews_from_cf(url, dealer_id, api_key)
-
-        # Print details for each review, including sentiment
-        for review in dealer_reviews:
-            print(f"Review: {review.review}")
-            print(f"Sentiment: {review.sentiment}")
-            print("-" * 30)
-
-        # Return a response (you can customize this part based on your needs)
-        return HttpResponse("Reviews and Sentiments Printed in Console")
-
-# Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
-def add_review(request, dealer_id):
-    # Check if the request method is POST
-    if request.method == "POST":
-        url = "your-cloud-function-domain/reviews/review-post"
-        api_key = "your_watson_nlu_api_key"  # Replace with your actual Watson NLU API key
-
-        # Create a dictionary object for the review
-        review = {
-            "time": datetime.utcnow().isoformat(),
-            "name": request.user.username,  # Assuming the username is used as the reviewer's name
-            "dealership": dealer_id,
-            "review": request.POST.get("review", ""),  # You can customize this based on your form fields
-            "purchase": bool(request.POST.get("purchase", False)),  # Example: a checkbox indicating purchase
-            # Add other attributes based on your review-post cloud function
-        }
-
-        # Create a JSON payload with the review
-        json_payload = {"review": review}
-
-        # Make the POST request to add a review
-        response = post_request(url, json_payload, dealerId=dealer_id, api_key=api_key)
-
-        # Return the response (you can customize this part based on your needs)
-        return HttpResponse(f"Review added successfully! Response: {response}")
-    else:
-        # Handle other HTTP methods (GET, etc.) as needed
-        return HttpResponse("Invalid HTTP method")
-
+        context = {}
+        dealer_url = "https://shanechien20-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+        dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
+        context["dealer"] = dealer
+    
+        review_url = ""
+        reviews = get_dealer_reviews_from_cf(review_url, id=id)
+        print(reviews)
+        context["reviews"] = reviews
         
-# get_dealerships
-def get_dealerships(request):
-    if request.method == "GET":
-        url = "https://shanechien20-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
-        # Get dealers from the URL
-        dealerships = get_dealers_from_cf(url)
-        # Concat all dealer's short name
-        return render(request, 'djangoapp/index.html', {"dealership_list": dealerships} )
+        return render(request, 'djangoapp/dealer_details.html', context)
+
+
+def add_review(request, id):
+    context = {}
+    dealer_url = "https://shanechien20-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+    dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
+    context["dealer"] = dealer
+    if request.method == 'GET':
+        # Get cars for the dealer
+        cars = CarModel.objects.all()
+        print(cars)
+        context["cars"] = cars
+        
+        return render(request, 'djangoapp/add_review.html', context)
+    elif request.method == 'POST':
+        if request.user.is_authenticated:
+            username = request.user.username
+            print(request.POST)
+            payload = dict()
+            car_id = request.POST["car"]
+            car = CarModel.objects.get(pk=car_id)
+            payload["time"] = datetime.utcnow().isoformat()
+            payload["name"] = username
+            payload["dealership"] = id
+            payload["id"] = id
+            payload["review"] = request.POST["content"]
+            payload["purchase"] = False
+            if "purchasecheck" in request.POST:
+                if request.POST["purchasecheck"] == 'on':
+                    payload["purchase"] = True
+            payload["purchase_date"] = request.POST["purchasedate"]
+            payload["car_make"] = car.make.name
+            payload["car_model"] = car.name
+            payload["car_year"] = int(car.year.strftime("%Y"))
+
+            new_payload = {}
+            new_payload["review"] = payload
+            review_post_url = ""
+            post_request(review_post_url, new_payload, id=id)
+        return redirect("djangoapp:dealer_details", id=id)
