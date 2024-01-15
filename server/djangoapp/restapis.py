@@ -68,10 +68,14 @@ def get_dealers_from_cf(url, **kwargs):
             dealer_doc = dealer
             # print(dealer_doc)
             # Create a CarDealer object with values in `doc` object
-            dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"],
-                                   id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"], full_name=dealer_doc["full_name"],
-                                
-                                   st=dealer_doc["st"], zip=dealer_doc["zip"])
+            dealer_obj = CarDealer(address=dealer_doc["address"], 
+                                   city=dealer_doc["city"],
+                                   id=dealer_doc["id"], 
+                                   lat=dealer_doc["lat"], 
+                                   long=dealer_doc["long"], 
+                                   full_name=dealer_doc["full_name"],                                
+                                   st=dealer_doc["st"], 
+                                   zip=dealer_doc["zip"])
             results.append(dealer_obj)
 
     return results
@@ -86,10 +90,15 @@ def get_dealer_by_id_from_cf(url, id):
         
     
         dealer_doc = dealers[0]
-        dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"],
-                                id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"], full_name=dealer_doc["full_name"],
-                                
-                                st=dealer_doc["st"], zip=dealer_doc["zip"])
+        dealer_obj = DealerReview(dealership=dealer_doc["dealership"],
+                                  name=dealer_doc["name"],
+                                  purchase=dealer_doc["purchase"],
+                                  review=dealer_doc["review"],
+                                  purchase_date=dealer_doc["purchase_date"],
+                                  car_make=dealer_doc["car_make"],
+                                  car_model=dealer_doc["car_model"],
+                                  car_year=dealer_doc["car_year"],
+                                  sentiment=None )
     return dealer_obj
 
 
@@ -106,9 +115,9 @@ def get_dealer_reviews_from_cf(url, **kwargs):
         reviews = json_result["data"]["docs"]
         for dealer_review in reviews:
             review_obj = DealerReview(dealership=dealer_review["dealership"],
-                                   name=dealer_review["name"],
-                                   purchase=dealer_review["purchase"],
-                                   review=dealer_review["review"])
+                                      name=dealer_review["name"],
+                                      purchase=dealer_review["purchase"],
+                                      review=dealer_review["review"])
             if "id" in dealer_review:
                 review_obj.id = dealer_review["id"]
             if "purchase_date" in dealer_review:
