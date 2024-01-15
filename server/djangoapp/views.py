@@ -106,7 +106,7 @@ def add_review(request, id):
     context["dealer"] = dealer
     if request.method == 'GET':
         # Get cars for the dealer
-        cars = CarModel.objects.all()
+        cars = CarModel.objects.all() 
         context["cars"] = cars
         
         return render(request, 'djangoapp/add_review.html', context)
@@ -134,5 +134,5 @@ def add_review(request, id):
             new_payload = {}
             new_payload["review"] = payload
             review_post_url = "https://shanechien20-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review?"
-            post_request(review_post_url, new_payload, id=id)
+            post_request(review_post_url, payload, id=id)
         return redirect("djangoapp:dealer_details", id=id)
