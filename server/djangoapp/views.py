@@ -22,7 +22,7 @@ def about(request):
 
 def contact(request):
     context = {}
-    return render(request, 'djangoapp/contact.html', context)
+    return render(request, 'djangoapp/contact_us.html', context)
     
 
 def registration_request(request):
