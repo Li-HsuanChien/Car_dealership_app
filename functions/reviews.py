@@ -69,4 +69,4 @@ def post_review():
     return jsonify({"message": "Review posted successfully"}), 201
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
