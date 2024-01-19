@@ -17,7 +17,7 @@
 * [![Express][Express.js]][Express-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 * [ibm-clodant](https://www.ibm.com/products/cloudant?utm_content=SRCWW&p1=Search&p4=43700074369655661&p5=e&gclid=Cj0KCQiA2KitBhCIARIsAPPMEhLEUBpVAYLRDMkTIaoYTSBzRRyAHgda97W0ryozhh0pjTN3MFVXpeIaAoxmEALw_wcB&gclsrc=aw.ds)
-*[ibm Natural Language Understanding](https://cloud.ibm.com/apidocs/natural-language-understanding)
+* [ibm Natural Language Understanding](https://cloud.ibm.com/apidocs/natural-language-understanding)
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
