@@ -24,15 +24,15 @@
 
 ## Overview
 
-[![Product Name Screen Shot One][product-screenshot-one]](https://github.com/Li-HsuanChien/Online_course_app)
+[![Product Name Screen Shot One][product-screenshot-one]](https://github.com/Li-HsuanChien/Car_dealership_app)
 
 <hr>
 
-[![Product Name Screen Shot Two][product-screenshot-two]](https://github.com/Li-HsuanChien/Online_course_app)
+[![Product Name Screen Shot Two][product-screenshot-two]](https://github.com/Li-HsuanChien/Car_dealership_app)
 
 <hr>
 
-[![Product Name Screen Shot Three][product-screenshot-three]](https://github.com/Li-HsuanChien/Online_course_app)
+[![Product Name Screen Shot Three][product-screenshot-three]](https://github.com/Li-HsuanChien/Car_dealership_app)
 
 <hr>
 
