@@ -38,6 +38,24 @@
 
 The app is a comprehensive dealership and user management platform designed to streamline the process of discovering, reviewing, and interacting with independent car dealerships. Users can easily explore a list of dealerships with detailed information such as city, address, zip, and state. The app enables user registration and authentication for a personalized experience. Additionally, users can submit and read reviews for independent dealerships, with sentiments labeled for each review.
 
+- ## Features
+
+    **Discover Dealerships:**
+    - Access a user-friendly list of independent dealerships.
+    - View detailed information, including city, address, zip, and state.
+
+    **User Registration and Authentication:**
+    - Register as a user to unlock personalized features.
+    - Authenticate securely for a seamless and secure experience.
+
+    **Review Dealerships:**
+    - Share your experiences by submitting reviews for independent dealerships.
+    - Read reviews from other users to make informed decisions.
+
+    **Sentiment Analysis:**
+    - Each review is analyzed for sentiment.
+    - Sentiments (positive, neutral, or negative) are labeled for quick understanding.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Getting Started
@@ -205,21 +223,24 @@ The app is a comprehensive dealership and user management platform designed to s
 
 ## Usage
 
-1.  **Discover Dealerships:**
-        - Access a user-friendly list of independent dealerships.
-        - View detailed information, including city, address, zip, and state.
+**Course Management:**
+  
+  -create super user using ```bash python manage.py createsuperuser```
+  -navigate to http://localhost:8000/admin and login
+  -edit django models
+  -navigating to dealers, models, makers to customize dealerships, car models, and car makers
 
-2.    **User Registration and Authentication:**
-        - Register as a user to unlock personalized features.
-        - Authenticate securely for a seamless and secure experience.
+**Read reviews:**
+- click on dealership names to inspect dealership reviews
+- read label icons to easily understand the sentiment of the review
 
-3.    **Review Dealerships:**
-        - Share your experiences by submitting reviews for independent dealerships.
-        - Read reviews from other users to make informed decisions.
+**Review Dealerships:**
+    - login through nav bar
+    - click the "add review" button to add review to relevant dealerships
 
-4.    **Sentiment Analysis:**
-        - Each review is analyzed for sentiment.
-        - Sentiments (positive, neutral, or negative) are labeled for quick understanding.
+**Review details:**
+    - Each review is analyzed for sentiment
+    - Add review, past transaction records and product model
   
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
   
